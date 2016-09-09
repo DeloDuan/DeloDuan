@@ -1,0 +1,26 @@
+[
+    {
+        "merged": "D:\\Dev\\AndroidStudio\\project\\IJKFisheyePlayer\\mediaplayer\\build\\intermediates\\res\\merged\\androidTest\\debug\\raw\\per_pixel_fragment_shader_bitmap.glsl",
+        "source": "D:\\Dev\\AndroidStudio\\project\\IJKFisheyePlayer\\mediaplayer\\build\\intermediates\\exploded-aar\\IJKFisheyePlayer\\vrlib\\unspecified\\res\\raw\\per_pixel_fragment_shader_bitmap.glsl"
+    },
+    {
+        "merged": "D:\\Dev\\AndroidStudio\\project\\IJKFisheyePlayer\\mediaplayer\\build\\intermediates\\res\\merged\\androidTest\\debug\\raw\\per_pixel_fragment_shader.glsl",
+        "source": "D:\\Dev\\AndroidStudio\\project\\IJKFisheyePlayer\\mediaplayer\\build\\intermediates\\exploded-aar\\IJKFisheyePlayer\\vrlib\\unspecified\\res\\raw\\per_pixel_fragment_shader.glsl"
+    },
+    {
+        "merged": "D:\\Dev\\AndroidStudio\\work\\VRShowStudio\\mediaplayer\\build\\intermediates\\res\\merged\\androidTest\\debug\\raw\\per_pixel_fragment_shader_bitmap.glsl",
+        "source": "D:\\Dev\\AndroidStudio\\work\\VRShowStudio\\mediaplayer\\build\\intermediates\\exploded-aar\\VRShowStudio\\vrlib\\unspecified\\res\\raw\\per_pixel_fragment_shader_bitmap.glsl"
+    },
+    {
+        "merged": "D:\\Dev\\AndroidStudio\\work\\VRShowStudio\\mediaplayer\\build\\intermediates\\res\\merged\\androidTest\\debug\\raw\\per_pixel_fragment_shader.glsl",
+        "source": "D:\\Dev\\AndroidStudio\\work\\VRShowStudio\\mediaplayer\\build\\intermediates\\exploded-aar\\VRShowStudio\\vrlib\\unspecified\\res\\raw\\per_pixel_fragment_shader.glsl"
+    },
+    {
+        "merged": "D:\\Dev\\AndroidStudio\\project\\IJKFisheyePlayer\\mediaplayer\\build\\intermediates\\res\\merged\\androidTest\\debug\\raw\\per_pixel_vertex_shader.glsl",
+        "source": "D:\\Dev\\AndroidStudio\\project\\IJKFisheyePlayer\\mediaplayer\\build\\intermediates\\exploded-aar\\IJKFisheyePlayer\\vrlib\\unspecified\\res\\raw\\per_pixel_vertex_shader.glsl"
+    },
+    {
+        "merged": "D:\\Dev\\AndroidStudio\\work\\VRShowStudio\\mediaplayer\\build\\intermediates\\res\\merged\\androidTest\\debug\\raw\\per_pixel_vertex_shader.glsl",
+        "source": "D:\\Dev\\AndroidStudio\\work\\VRShowStudio\\mediaplayer\\build\\intermediates\\exploded-aar\\VRShowStudio\\vrlib\\unspecified\\res\\raw\\per_pixel_vertex_shader.glsl"
+    }
+]
