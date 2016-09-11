@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">IJKFisheyePlayer</string>
+    <string name="edit_desc_text">输入地址:</string>
+    <string name="video_play">视频播放</string>
+    <string name="image_show">图片展示</string>
+    <string name="change_mode">切换</string>
 </resources>

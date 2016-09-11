@@ -90,6 +90,7 @@ public class GLSurfaceRenderView extends GLSurfaceView implements IRenderView, M
                 .displayMode(MDVRLibrary.DISPLAY_MODE_NORMAL)
                 .interactiveMode(MDVRLibrary.INTERACTIVE_MODE_MOTION)
                 .asVideo(mSurfaceCallback)
+                .pinchEnabled(true)
                 .build(this);
         return mMDVRLibrary;
     }

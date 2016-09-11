@@ -92,7 +92,7 @@ public class ProjectionModeManager extends ModeManager<AbsProjectionStrategy> im
         
         switch (mode){
             case MDVRLibrary.PROJECTION_MODE_DOME180:
-                return new DomeProjection(this.mTextureSize,180f,false);
+                return new DomeProjection(this.mTextureSize,185f,false);
             case MDVRLibrary.PROJECTION_MODE_DOME230:
                 return new DomeProjection(this.mTextureSize,230f,false);
             case MDVRLibrary.PROJECTION_MODE_DOME180_UPPER:

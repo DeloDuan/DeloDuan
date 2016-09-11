@@ -28,131 +28,131 @@ import static com.asha.vrlib.common.GLUtil.glCheck;
  */
 public class MD360Renderer implements GLSurfaceView.Renderer {
 
-	private static final String TAG = "MD360Renderer";
-	private DisplayModeManager mDisplayModeManager;
-	private ProjectionModeManager mProjectionModeManager;
-	private MDPluginManager mPluginManager;
-	private MDAbsLinePipe mMainLinePipe;
-	private Fps mFps = new Fps();
-	private int mWidth;
-	private int mHeight;
+    private static final String TAG = "MD360Renderer";
+    private DisplayModeManager mDisplayModeManager;
+    private ProjectionModeManager mProjectionModeManager;
+    private MDPluginManager mPluginManager;
+    private MDAbsLinePipe mMainLinePipe;
+    private Fps mFps = new Fps();
+    private int mWidth;
+    private int mHeight;
 
-	// private MDBarrelDistortionPlugin mBarrelDistortionPlugin;
+    // private MDBarrelDistortionPlugin mBarrelDistortionPlugin;
 
-	// final
-	private final Context mContext;
+    // final
+    private final Context mContext;
 
-	private MD360Renderer(Builder params){
-		mContext = params.context;
-		mDisplayModeManager = params.displayModeManager;
-		mProjectionModeManager = params.projectionModeManager;
-		mPluginManager = params.pluginManager;
+    private MD360Renderer(Builder params) {
+        mContext = params.context;
+        mDisplayModeManager = params.displayModeManager;
+        mProjectionModeManager = params.projectionModeManager;
+        mPluginManager = params.pluginManager;
 
-		mMainLinePipe = new MDBarrelDistortionLinePipe(mDisplayModeManager);
-	}
+        mMainLinePipe = new MDBarrelDistortionLinePipe(mDisplayModeManager);
+    }
 
-	@Override
-	public void onSurfaceCreated(GL10 glUnused, EGLConfig config){
-		// set the background clear color to black.
-		GLES20.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-		
-		// use culling to remove back faces.
-		GLES20.glEnable(GLES20.GL_CULL_FACE);
-		
-		// enable depth testing
-		// GLES20.glEnable(GLES20.GL_DEPTH_TEST);
-	}
+    @Override
+    public void onSurfaceCreated(GL10 glUnused, EGLConfig config) {
+        // set the background clear color to black.
+        GLES20.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
-	@Override
-	public void onSurfaceChanged(GL10 glUnused, int width, int height){
-		this.mWidth = width;
-		this.mHeight = height;
-	}
+        // use culling to remove back faces.
+        GLES20.glEnable(GLES20.GL_CULL_FACE);
 
-	@Override
-	public void onDrawFrame(GL10 glUnused){
+        // enable depth testing
+        // GLES20.glEnable(GLES20.GL_DEPTH_TEST);
+    }
 
-		GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
-		glCheck("MD360Renderer onDrawFrame 1");
+    @Override
+    public void onSurfaceChanged(GL10 glUnused, int width, int height) {
+        this.mWidth = width;
+        this.mHeight = height;
+    }
 
-		int size = mDisplayModeManager.getVisibleSize();
+    @Override
+    public void onDrawFrame(GL10 glUnused) {
 
-		int width = (int) (this.mWidth * 1.0f / size);
-		int height = mHeight;
+        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
+        glCheck("MD360Renderer onDrawFrame 1");
 
-		// take over
-		mMainLinePipe.setup(mContext);
-		mMainLinePipe.takeOver(mWidth,mHeight,size);
+        int size = mDisplayModeManager.getVisibleSize();
 
-		List<MD360Director> directors = mProjectionModeManager.getDirectors();
+        int width = (int) (this.mWidth * 1.0f / size);
+        int height = mHeight;
 
-		// main plugin
-		MDAbsPlugin mainPlugin = mProjectionModeManager.getMainPlugin();
-		if (mainPlugin != null){
-			mainPlugin.setup(mContext);
-			mainPlugin.beforeRenderer(this.mWidth, this.mHeight);
-		}
+        // take over
+        mMainLinePipe.setup(mContext);
+        mMainLinePipe.takeOver(mWidth, mHeight, size);
 
-		for (MDAbsPlugin plugin : mPluginManager.getPlugins()) {
-			plugin.setup(mContext);
-			plugin.beforeRenderer(this.mWidth, this.mHeight);
-		}
+        List<MD360Director> directors = mProjectionModeManager.getDirectors();
 
-		for (int i = 0; i < size; i++){
-			if (i >= directors.size()) break;
+        // main plugin
+        MDAbsPlugin mainPlugin = mProjectionModeManager.getMainPlugin();
+        if (mainPlugin != null) {
+            mainPlugin.setup(mContext);
+            mainPlugin.beforeRenderer(this.mWidth, this.mHeight);
+        }
 
-			MD360Director director = directors.get(i);
-			GLES20.glViewport(width * i, 0, width, height);
-			GLES20.glEnable(GLES20.GL_SCISSOR_TEST);
-			GLES20.glScissor(width * i, 0, width, height);
+        for (MDAbsPlugin plugin : mPluginManager.getPlugins()) {
+            plugin.setup(mContext);
+            plugin.beforeRenderer(this.mWidth, this.mHeight);
+        }
 
-			if (mainPlugin != null){
-				mainPlugin.renderer(i, width, height, director);
-			}
+        for (int i = 0; i < size; i++) {
+            if (i >= directors.size()) break;
 
-			for (MDAbsPlugin plugin : mPluginManager.getPlugins()) {
-				plugin.renderer(i, width, height, director);
-			}
+            MD360Director director = directors.get(i);
+            GLES20.glViewport(width * i, 0, width, height);
+            GLES20.glEnable(GLES20.GL_SCISSOR_TEST);
+            GLES20.glScissor(width * i, 0, width, height);
 
-			GLES20.glDisable(GLES20.GL_SCISSOR_TEST);
-		}
+            if (mainPlugin != null) {
+                mainPlugin.renderer(i, width, height, director);
+            }
 
-		mMainLinePipe.commit(mWidth,mHeight,size);
-		// mFps.step();
-	}
+            for (MDAbsPlugin plugin : mPluginManager.getPlugins()) {
+                plugin.renderer(i, width, height, director);
+            }
 
-	public static Builder with(Context context) {
-		Builder builder = new Builder();
-		builder.context = context;
-		return builder;
-	}
+            GLES20.glDisable(GLES20.GL_SCISSOR_TEST);
+        }
 
-	public static class Builder{
-		private Context context;
-		private DisplayModeManager displayModeManager;
-		private ProjectionModeManager projectionModeManager;
-		public MDPluginManager pluginManager;
+        mMainLinePipe.commit(mWidth, mHeight, size);
+        // mFps.step();
+    }
 
-		private Builder() {
-		}
+    public static Builder with(Context context) {
+        Builder builder = new Builder();
+        builder.context = context;
+        return builder;
+    }
 
-		public MD360Renderer build(){
-			return new MD360Renderer(this);
-		}
+    public static class Builder {
+        private Context context;
+        private DisplayModeManager displayModeManager;
+        private ProjectionModeManager projectionModeManager;
+        public MDPluginManager pluginManager;
 
-		public Builder setPluginManager(MDPluginManager pluginManager) {
-			this.pluginManager = pluginManager;
-			return this;
-		}
+        private Builder() {
+        }
 
-		public Builder setDisplayModeManager(DisplayModeManager displayModeManager) {
-			this.displayModeManager = displayModeManager;
-			return this;
-		}
+        public MD360Renderer build() {
+            return new MD360Renderer(this);
+        }
 
-		public Builder setProjectionModeManager(ProjectionModeManager projectionModeManager) {
-			this.projectionModeManager = projectionModeManager;
-			return this;
-		}
-	}
+        public Builder setPluginManager(MDPluginManager pluginManager) {
+            this.pluginManager = pluginManager;
+            return this;
+        }
+
+        public Builder setDisplayModeManager(DisplayModeManager displayModeManager) {
+            this.displayModeManager = displayModeManager;
+            return this;
+        }
+
+        public Builder setProjectionModeManager(ProjectionModeManager projectionModeManager) {
+            this.projectionModeManager = projectionModeManager;
+            return this;
+        }
+    }
 }

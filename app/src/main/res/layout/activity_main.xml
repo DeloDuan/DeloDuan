@@ -9,8 +9,48 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.fisheye.duan.ijkfisheyeplayer.MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
+
+    <EditText
+        android:id="@+id/url_editText"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:hint="@string/edit_desc_text"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="50dp"
+        />
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/url_editText"
+        android:layout_centerHorizontal="true">
+
+        <Button
+            android:id="@+id/video_play"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_margin="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/video_play"
+            />
+
+        <Button
+            android:id="@+id/image_show"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_margin="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/video_play"
+            android:text="@string/image_show"
+            />
+
+    </RelativeLayout>
+
+
 </RelativeLayout>

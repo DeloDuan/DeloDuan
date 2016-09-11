@@ -49,10 +49,13 @@ import java.util.Map;
 import tv.danmaku.ijk.media.player.AndroidMediaPlayer;
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
+import tv.danmaku.ijk.media.player.misc.IMediaDataSource;
 
 public class VRVideoView extends FrameLayout implements MediaPlayerControl{
     private String TAG = "IjkVideoView";
     // settable by the client
+
+    private IMediaDataSource mMediaDataSource;
     private Uri mUri;
     private Map<String, String> mHeaders;
     // all possible internal states
@@ -180,7 +183,7 @@ public class VRVideoView extends FrameLayout implements MediaPlayerControl{
             return;
 
         mRenderView = renderView;
-        renderView.setAspectRatio(mCurrentAspectRatio);
+        mRenderView.setAspectRatio(mCurrentAspectRatio);
         if (mVideoWidth > 0 && mVideoHeight > 0)
             renderView.setVideoSize(mVideoWidth, mVideoHeight);
         if (mVideoSarNum > 0 && mVideoSarDen > 0)
@@ -275,6 +278,15 @@ public class VRVideoView extends FrameLayout implements MediaPlayerControl{
         invalidate();
     }
 
+    public void setDataSource(IMediaDataSource mediaDataSource){
+        mMediaDataSource = mediaDataSource;
+        mSeekWhenPrepared = 0;
+        if (mMediaPlayer == null)
+            openVideo();
+        requestLayout();
+        invalidate();
+    }
+
     // REMOVED: addSubtitleSource
     // REMOVED: mPendingSubtitleTracks
 
@@ -290,7 +302,7 @@ public class VRVideoView extends FrameLayout implements MediaPlayerControl{
 
     @TargetApi(Build.VERSION_CODES.M)
     private void openVideo() {
-        if (mUri == null || mSurfaceHolder == null) {
+        if ((mUri == null && mMediaDataSource == null) || mSurfaceHolder == null) {
             // not ready for playback just yet, will try again later
             return;
         }
@@ -316,11 +328,17 @@ public class VRVideoView extends FrameLayout implements MediaPlayerControl{
             mMediaPlayer.setOnInfoListener(mInfoListener);
             mMediaPlayer.setOnBufferingUpdateListener(mBufferingUpdateListener);
             mCurrentBufferPercentage = 0;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-                mMediaPlayer.setDataSource(mAppContext, mUri, mHeaders);
-            } else {
-                mMediaPlayer.setDataSource(mUri.toString());
+
+            if(mUri != null){
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+                    mMediaPlayer.setDataSource(mAppContext, mUri, mHeaders);
+                } else {
+                    mMediaPlayer.setDataSource(mUri.toString());
+                }
+            }else{
+                mMediaPlayer.setDataSource(mMediaDataSource);
             }
+
             bindSurfaceHolder(mMediaPlayer, mSurfaceHolder);
             mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             mMediaPlayer.setScreenOnWhilePlaying(true);
@@ -1105,7 +1123,7 @@ public class VRVideoView extends FrameLayout implements MediaPlayerControl{
             IRenderView.AR_16_9_FIT_PARENT,
             IRenderView.AR_4_3_FIT_PARENT};
     private int mCurrentAspectRatioIndex = 0;
-    private int mCurrentAspectRatio = s_allAspectRatio[0];
+    private int mCurrentAspectRatio = s_allAspectRatio[2];
 
     public int toggleAspectRatio() {
         mCurrentAspectRatioIndex++;
@@ -1117,6 +1135,11 @@ public class VRVideoView extends FrameLayout implements MediaPlayerControl{
         return mCurrentAspectRatio;
     }
 
+    public void setAspectRatio(int aspectRatio){
+        if (mRenderView != null)
+            mRenderView.setAspectRatio(aspectRatio);
+    }
+
     //-------------------------
     // Extend: Render
     //-------------------------
@@ -1125,7 +1148,7 @@ public class VRVideoView extends FrameLayout implements MediaPlayerControl{
     public static final int RENDER_TEXTURE_VIEW = 2;
     public static final int RENDER_GL_SURFACE_VIEW = 3;
 
-    private int mCurrentRender = RENDER_NONE;
+    private int mCurrentRender = RENDER_GL_SURFACE_VIEW;
 
     private void initRenders() {
         setRender(mCurrentRender);

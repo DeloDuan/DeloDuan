@@ -39,7 +39,6 @@ import static com.asha.vrlib.common.VRUtil.notNull;
  * hzqiujiadi ashqalcn@gmail.com
  */
 public class MDVRLibrary {
-
     private static final String TAG = "MDVRLibrary";
     public static final int sMultiScreenSize = 2;
 

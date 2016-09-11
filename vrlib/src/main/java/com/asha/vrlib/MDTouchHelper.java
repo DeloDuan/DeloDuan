@@ -89,13 +89,8 @@ public class MDTouchHelper {
                     handlePinch(distance);
                 }
         }
-
-        if (ispic) {
-            mGestureDetector.onTouchEvent(event);
-            return true;
-        } else {
-            return mGestureDetector.onTouchEvent(event);
-        }
+        mGestureDetector.onTouchEvent(event);
+        return true;
     }
 
     private void handlePinch(float distance) {
