@@ -25,7 +25,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.MediaController;
 
-import com.asha.vrlib.MDVRLibrary;
+import com.glextend.vrlib.GLLibrary;
 import com.xnxs.mediaplayer.widget.media.IMediaController;
 import com.xnxs.mediaplayer.widget.media.MediaPlayerVRControl;
 
@@ -37,7 +37,7 @@ public class AndroidMediaController extends MediaController implements IMediaCon
     private MediaPlayerVRControl mediaPlayerVRControl;
     private Activity mActivity;
 
-    private MDVRLibrary mMDVRLibrary;
+    private GLLibrary mMDVRLibrary;
 
 
     public AndroidMediaController(Context context, AttributeSet attrs) {
@@ -114,9 +114,9 @@ public class AndroidMediaController extends MediaController implements IMediaCon
 
 
     private void attachVRControl() {
-        mMDVRLibrary.switchInteractiveMode(mActivity,MDVRLibrary.INTERACTIVE_MODE_TOUCH);
-        mMDVRLibrary.switchDisplayMode(mActivity,MDVRLibrary.DISPLAY_MODE_NORMAL);
-        mMDVRLibrary.switchProjectionMode(mActivity,MDVRLibrary.PROJECTION_MODE_DOME180);
+        mMDVRLibrary.switchInteractiveMode(mActivity, GLLibrary.INTERACTIVE_MODE_TOUCH);
+        mMDVRLibrary.switchDisplayMode(mActivity, GLLibrary.DISPLAY_MODE_NORMAL);
+        mMDVRLibrary.switchProjectionMode(mActivity, GLLibrary.PROJECTION_MODE_DOME180);
     }
 
     //----------

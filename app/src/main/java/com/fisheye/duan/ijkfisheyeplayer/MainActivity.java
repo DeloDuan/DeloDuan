@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
     private String getPreferencesUrl(){
         SharedPreferences preferences=getSharedPreferences("user", Context.MODE_PRIVATE);
-        String name=preferences.getString("url", "/mnt/sdcard/Download/ts.mp4");
+        String name=preferences.getString("url", "");
         return name;
     }
 

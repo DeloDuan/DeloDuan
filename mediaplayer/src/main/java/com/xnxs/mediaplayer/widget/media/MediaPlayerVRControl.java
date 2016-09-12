@@ -2,7 +2,7 @@ package com.xnxs.mediaplayer.widget.media;
 
 import android.app.Activity;
 
-import com.asha.vrlib.MDVRLibrary;
+import com.glextend.vrlib.GLLibrary;
 
 /**
  * Created by duanchunlin on 2016/8/17.
@@ -21,5 +21,5 @@ public interface MediaPlayerVRControl {
     int VIDEO_SPLIT_UP_DOWN = 2;//上下分屏
     int VIDEO_SPLIT_MAX = 2; //暂时没有上下分屏按钮
 
-    MDVRLibrary bindVRLibrary(Activity activity);
+    GLLibrary bindVRLibrary(Activity activity);
 }

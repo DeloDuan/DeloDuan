@@ -1,1 +1,1 @@
-include ':app', ':mediaplayer', ':vrlib', ':gllib'
+include ':app', ':mediaplayer', ':gllib'

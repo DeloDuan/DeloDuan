@@ -12,20 +12,15 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 import android.view.View;
 
-import com.asha.vrlib.MDVRLibrary;
+import com.glextend.vrlib.GLLibrary;
 
 import java.lang.ref.WeakReference;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import javax.microedition.khronos.egl.EGLConfig;
-import javax.microedition.khronos.opengles.GL10;
-
 import tv.danmaku.ijk.media.player.IMediaPlayer;
-import tv.danmaku.ijk.media.player.ISurfaceTextureHolder;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 
 /**
@@ -37,7 +32,7 @@ public class GLSurfaceRenderView extends GLSurfaceView implements IRenderView, M
 
     private MeasureHelper mMeasureHelper;
     private SurfaceCallback mSurfaceCallback;
-    private MDVRLibrary mMDVRLibrary;
+    private GLLibrary mMDVRLibrary;
     private Activity mContext;
 
     public GLSurfaceRenderView(Context context) {
@@ -81,14 +76,14 @@ public class GLSurfaceRenderView extends GLSurfaceView implements IRenderView, M
     }
 
     @Override
-    public MDVRLibrary bindVRLibrary(Activity activity) {
+    public GLLibrary bindVRLibrary(Activity activity) {
         if (mMDVRLibrary != null) {
             mMDVRLibrary.onDestroy();
         }
         mContext = activity;
-        mMDVRLibrary = MDVRLibrary.with(activity)
-                .displayMode(MDVRLibrary.DISPLAY_MODE_NORMAL)
-                .interactiveMode(MDVRLibrary.INTERACTIVE_MODE_MOTION)
+        mMDVRLibrary = GLLibrary.with(activity)
+                .displayMode(GLLibrary.DISPLAY_MODE_NORMAL)
+                .interactiveMode(GLLibrary.INTERACTIVE_MODE_MOTION)
                 .asVideo(mSurfaceCallback)
                 .pinchEnabled(true)
                 .build(this);
@@ -231,7 +226,7 @@ public class GLSurfaceRenderView extends GLSurfaceView implements IRenderView, M
         }
     }
 
-    private static final class SurfaceCallback implements SurfaceHolder.Callback, MDVRLibrary.IOnSurfaceReadyCallback {
+    private static final class SurfaceCallback implements SurfaceHolder.Callback, GLLibrary.IOnSurfaceReadyCallback {
         private SurfaceHolder mSurfaceHolder;
         private boolean mIsFormatChanged;
         private int mFormat;
