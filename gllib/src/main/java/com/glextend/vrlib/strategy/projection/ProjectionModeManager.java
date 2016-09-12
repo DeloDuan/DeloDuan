@@ -19,9 +19,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * Created by  on 16/6/25.
  */
 public class ProjectionModeManager extends ModeManager<AbsProjectionStrategy> implements IProjectionMode {
-
-    public static int[] sModes = {GLLibrary.PROJECTION_MODE_SPHERE, GLLibrary.PROJECTION_MODE_DOME180, GLLibrary.PROJECTION_MODE_DOME230};
-
     public static class Params{
         public RectF textureSize;
         public GL360DirectorFactory directorFactory;
@@ -71,9 +68,7 @@ public class ProjectionModeManager extends ModeManager<AbsProjectionStrategy> im
             mMainPlugin.destroy();
             mMainPlugin = null;
         }
-
         mDirectors.clear();
-
         GL360DirectorFactory factory = getStrategy().hijackDirectorFactory();
         factory = factory == null ? mCustomDirectorFactory : factory;
 
@@ -88,31 +83,7 @@ public class ProjectionModeManager extends ModeManager<AbsProjectionStrategy> im
             AbsProjectionStrategy strategy = mProjectionFactory.createStrategy(mode);
             if (strategy != null) return strategy;
         }
-        
-        switch (mode){
-            case GLLibrary.PROJECTION_MODE_DOME180:
-                return new DomeProjection(this.mTextureSize,185f,false);
-            case GLLibrary.PROJECTION_MODE_DOME230:
-                return new DomeProjection(this.mTextureSize,230f,false);
-            case GLLibrary.PROJECTION_MODE_DOME180_UPPER:
-                return new DomeProjection(this.mTextureSize,180f,true);
-            case GLLibrary.PROJECTION_MODE_DOME230_UPPER:
-                return new DomeProjection(this.mTextureSize,230f,true);
-            case GLLibrary.PROJECTION_MODE_STEREO_SPHERE:
-                return new StereoSphereProjection();
-            case GLLibrary.PROJECTION_MODE_PLANE_FIT:
-            case GLLibrary.PROJECTION_MODE_PLANE_CROP:
-            case GLLibrary.PROJECTION_MODE_PLANE_FULL:
-                return PlaneProjection.create(mode,this.mTextureSize);
-            case GLLibrary.PROJECTION_MODE_SPHERE:
-            default:
-                return new SphereProjection();
-        }
-    }
-
-    @Override
-    protected int[] getModes() {
-        return sModes;
+        return new SphereProjection();
     }
 
     @Override

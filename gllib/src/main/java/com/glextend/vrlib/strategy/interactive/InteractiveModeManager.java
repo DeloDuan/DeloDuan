@@ -12,11 +12,6 @@ import com.glextend.vrlib.strategy.projection.ProjectionModeManager;
  */
 public class InteractiveModeManager extends ModeManager<AbsInteractiveStrategy> implements IInteractiveMode {
 
-    private static int[] sModes = {GLLibrary.INTERACTIVE_MODE_MOTION,
-            GLLibrary.INTERACTIVE_MODE_TOUCH,
-            GLLibrary.INTERACTIVE_MODE_MOTION_WITH_TOUCH,
-    };
-
     public static class Params{
         public int mMotionDelay;
         public SensorEventListener mSensorListener;
@@ -30,10 +25,6 @@ public class InteractiveModeManager extends ModeManager<AbsInteractiveStrategy> 
         mParams = params;
     }
 
-    @Override
-    protected int[] getModes() {
-        return sModes;
-    }
 
     @Override
     public void switchMode(Activity activity, int mode) {
