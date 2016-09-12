@@ -4,8 +4,6 @@ import com.glextend.vrlib.GL360Program;
 
 /**
  * Created by  on 16/1/25.
- *
- *
  * copied from surfaceTexture
  * Created by nitro888 on 15. 4. 5..
  * https://github.com/Nitro888/NitroAction360

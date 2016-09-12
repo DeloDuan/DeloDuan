@@ -144,15 +144,6 @@ public class GLLibrary {
 
     private void initPluginManager(Builder builder) {
         mPluginManager = new GLPluginManager();
-        /*
-        GLMainPluginBuilder mainPluginBuilder = new GLMainPluginBuilder()
-                .setContentType(builder.contentType)
-                .setTexture(builder.texture)
-                .setProjectionModeManager(mProjectionModeManager);
-        GLAbsPlugin mainPlugin = new MDMultiFishEyePlugin(mainPluginBuilder);
-
-        mPluginManager.add(mainPlugin);
-        */
     }
 
 

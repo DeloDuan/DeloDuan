@@ -38,7 +38,6 @@ public class DomeProjection extends AbsProjectionStrategy {
 
     @Override
     public void off(Activity activity) {
-
     }
 
     @Override

@@ -38,7 +38,6 @@ public class PlaneProjection extends AbsProjectionStrategy {
 
     @Override
     public void off(Activity activity) {
-
     }
 
     @Override
