@@ -74,7 +74,6 @@ public class GLLibrary {
             public void onDrag(float distanceX, float distanceY) {
                 mInteractiveModeManager.handleDrag((int) distanceX,(int) distanceY);
             }
-
             @Override
             public void onPinch(float scale) {
                 List<GL360Director> directors = mProjectionModeManager.getDirectors();

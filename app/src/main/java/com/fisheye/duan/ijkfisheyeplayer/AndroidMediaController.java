@@ -112,7 +112,6 @@ public class AndroidMediaController extends MediaController implements IMediaCon
         attachVRControl();
     }
 
-
     private void attachVRControl() {
     }
 
