@@ -31,8 +31,6 @@ public abstract class ModeManager<T extends IModeStrategy> {
 
     abstract protected T createStrategy(int mode);
 
-    abstract protected int[] getModes();
-
     private void initMode(Activity activity, int mode){
         if (mStrategy != null){
             off(activity);
@@ -43,16 +41,6 @@ public abstract class ModeManager<T extends IModeStrategy> {
         } else {
             on(activity);
         }
-    }
-
-    public void switchMode(Activity activity){
-        int[] modes = getModes();
-        int mode = getMode();
-        int index = Arrays.binarySearch(modes, mode);
-        int nextIndex = (index + 1) %  modes.length;
-        int nextMode = modes[nextIndex];
-
-        switchMode(activity,nextMode);
     }
 
     public void switchMode(Activity activity, int mode){

@@ -18,7 +18,6 @@ public class GLTouchHelper {
     private static final float sScaleMax = 4;
 
     private GLLibrary.IAdvanceGestureListener mAdvanceGestureListener;
-    private List<GLLibrary.IGestureListener> mClickListeners = new LinkedList<>();
     private GestureDetector mGestureDetector;
     private int mCurrentMode = 0;
     private PinchInfo mPinchInfo = new PinchInfo();
@@ -33,10 +32,6 @@ public class GLTouchHelper {
 
             public boolean onSingleTapConfirmed(MotionEvent e) {
                 if (mCurrentMode == MODE_PINCH) return false;
-
-                for (GLLibrary.IGestureListener listener : mClickListeners){
-                    listener.onClick(e);
-                }
                 return true;
             }
 
@@ -112,10 +107,6 @@ public class GLTouchHelper {
 
     private static float calDistance(float x1, float y1, float x2, float y2) {
         return (float) Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
-    }
-
-    public void addClickListener(GLLibrary.IGestureListener gestureListener) {
-        if (gestureListener != null) mClickListeners.add(gestureListener);
     }
 
     public void setAdvanceGestureListener(GLLibrary.IAdvanceGestureListener listener) {

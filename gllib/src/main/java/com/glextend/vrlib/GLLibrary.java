@@ -39,27 +39,6 @@ public class GLLibrary {
     private static final String TAG = "GLLibrary";
     public static final int sMultiScreenSize = 2;
 
-    // interactive mode
-    public static final int INTERACTIVE_MODE_MOTION = 1;
-    public static final int INTERACTIVE_MODE_TOUCH = 2;
-    public static final int INTERACTIVE_MODE_MOTION_WITH_TOUCH = 3;
-
-    // display mode
-    public static final int DISPLAY_MODE_NORMAL = 101;
-    public static final int DISPLAY_MODE_GLASS = 102;
-
-    // projection mode
-    public static final int PROJECTION_MODE_SPHERE = 201;
-    public static final int PROJECTION_MODE_DOME180 = 202;
-    public static final int PROJECTION_MODE_DOME230 = 203;
-    public static final int PROJECTION_MODE_DOME180_UPPER = 204;
-    public static final int PROJECTION_MODE_DOME230_UPPER = 205;
-    public static final int PROJECTION_MODE_STEREO_SPHERE = 206;
-    public static final int PROJECTION_MODE_PLANE_FIT = 207;
-    public static final int PROJECTION_MODE_PLANE_CROP = 208;
-    public static final int PROJECTION_MODE_PLANE_FULL = 209;
-
-    // private int mDisplayMode = DISPLAY_MODE_NORMAL;
     private RectF mTextureSize = new RectF(0,0,1024,1024);
     private InteractiveModeManager mInteractiveModeManager;
     private DisplayModeManager mDisplayModeManager;
@@ -85,7 +64,6 @@ public class GLLibrary {
 
         mTexture = builder.texture;
         mTouchHelper = new GLTouchHelper(builder.activity);
-        mTouchHelper.addClickListener(builder.gestureListener);
         mTouchHelper.setPinchEnabled(builder.pinchEnabled);
         mTouchHelper.setAdvanceGestureListener(new IAdvanceGestureListener() {
             @Override
@@ -114,7 +92,6 @@ public class GLLibrary {
     }
 
     private void initModeManager(Builder builder) {
-
         // init ProjectionModeManager
         ProjectionModeManager.Params projectionManagerParams = new ProjectionModeManager.Params();
         projectionManagerParams.textureSize = mTextureSize;
@@ -167,54 +144,6 @@ public class GLLibrary {
         }
     }
 
-    public void switchInteractiveMode(Activity activity) {
-        mInteractiveModeManager.switchMode(activity);
-    }
-
-    /**
-     * Switch Interactive Mode
-     *
-     * @param activity activity
-     * @param mode mode
-     *
-     * {@link #INTERACTIVE_MODE_MOTION}
-     * {@link #INTERACTIVE_MODE_TOUCH}
-     * {@link #INTERACTIVE_MODE_MOTION_WITH_TOUCH}
-     */
-    public void switchInteractiveMode(Activity activity, int mode){
-        mInteractiveModeManager.switchMode(activity,mode);
-    }
-
-    public void switchDisplayMode(Activity activity){
-        mDisplayModeManager.switchMode(activity);
-    }
-
-    /**
-     * Switch Display Mode
-     *
-     * @param activity activity
-     * @param mode mode
-     *
-     * {@link #DISPLAY_MODE_GLASS}
-     * {@link #DISPLAY_MODE_NORMAL}
-     */
-    public void switchDisplayMode(Activity activity, int mode){
-        mDisplayModeManager.switchMode(activity,mode);
-    }
-
-    /**
-     * Switch Projection Mode
-     *
-     * @param activity activity
-     * @param mode mode
-     *
-     * {@link #PROJECTION_MODE_SPHERE}
-     * {@link #PROJECTION_MODE_DOME180}
-     * and so on.
-     */
-    public void switchProjectionMode(Activity activity, int mode) {
-        mProjectionModeManager.switchMode(activity, mode);
-    }
 
     public void resetTouch(){
         List<GL360Director> directors = mProjectionModeManager.getDirectors();
@@ -343,14 +272,10 @@ public class GLLibrary {
      *
      */
     public static class Builder {
-        private int displayMode = DISPLAY_MODE_NORMAL;
-        private int interactiveMode = INTERACTIVE_MODE_MOTION;
-        private int projectionMode = PROJECTION_MODE_SPHERE;
         private Activity activity;
         private int contentType = ContentType.DEFAULT;
         private GL360Texture texture;
         private INotSupportCallback notSupportCallback;
-        private IGestureListener gestureListener;
         private boolean pinchEnabled; // default false.
         private BarrelDistortionConfig barrelDistortionConfig;
         private GL360DirectorFactory directorFactory;
@@ -361,21 +286,6 @@ public class GLLibrary {
 
         private Builder(Activity activity) {
             this.activity = activity;
-        }
-
-        public Builder displayMode(int displayMode){
-            this.displayMode = displayMode;
-            return this;
-        }
-
-        public Builder interactiveMode(int interactiveMode){
-            this.interactiveMode = interactiveMode;
-            return this;
-        }
-
-        public Builder projectionMode(int projectionMode){
-            this.projectionMode = projectionMode;
-            return this;
         }
 
         public Builder ifNotSupport(INotSupportCallback callback){
@@ -395,21 +305,6 @@ public class GLLibrary {
             contentType = ContentType.BITMAP;
             return this;
         }
-
-        /**
-         * gesture listener, e.g.
-         * onClick
-         * @deprecated please use {@link #listenGesture(IGestureListener)}
-         *
-         * @param listener listener
-         * @return builder
-         */
-        @Deprecated
-        public Builder gesture(IGestureListener listener) {
-            gestureListener = listener;
-            return this;
-        }
-
         /**
          * enable or disable the pinch gesture
          *
@@ -420,21 +315,6 @@ public class GLLibrary {
             this.pinchEnabled = enabled;
             return this;
         }
-
-
-
-        /**
-         * gesture listener, e.g.
-         * onClick
-         *
-         * @param listener listener
-         * @return builder
-         */
-        public Builder listenGesture(IGestureListener listener) {
-            gestureListener = listener;
-            return this;
-        }
-
         /**
          * sensor delay in motion mode.
          *
