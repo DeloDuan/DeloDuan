@@ -9,29 +9,17 @@ import com.glextend.vrlib.strategy.ModeManager;
  */
 public class DisplayModeManager extends ModeManager<AbsDisplayStrategy> implements IDisplayMode {
 
-    public static int[] sModes = {GLLibrary.DISPLAY_MODE_NORMAL, GLLibrary.DISPLAY_MODE_GLASS};
 
     private boolean antiDistortionEnabled;
     private BarrelDistortionConfig barrelDistortionConfig;
 
-    public DisplayModeManager(int mode) {
-        super(mode);
+    public DisplayModeManager() {
+        super();
     }
 
     @Override
-    protected int[] getModes() {
-        return sModes;
-    }
-
-    @Override
-    protected AbsDisplayStrategy createStrategy(int mode) {
-        switch (mode){
-            case GLLibrary.DISPLAY_MODE_GLASS:
-                return new GlassStrategy();
-            case GLLibrary.DISPLAY_MODE_NORMAL:
-            default:
-                return new NormalStrategy();
-        }
+    protected AbsDisplayStrategy createStrategy() {
+        return new NormalStrategy();
     }
 
     @Override

@@ -24,9 +24,7 @@ public abstract class GLAbsObject3D {
     private SparseArray<FloatBuffer> mTexCoordinateBuffers = new SparseArray<>(2);
     private SparseArray<FloatBuffer> mVerticesBuffers = new SparseArray<>(2);
 
-
     public GLAbsObject3D() {
-
     }
 
     public void uploadVerticesBufferIfNeed(GL360Program program, int index){

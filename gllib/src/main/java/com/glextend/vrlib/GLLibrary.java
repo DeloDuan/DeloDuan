@@ -36,6 +36,7 @@ import static com.glextend.vrlib.common.VRUtil.notNull;
  * Created by  on 16/3/12.
  */
 public class GLLibrary {
+
     private static final String TAG = "GLLibrary";
     public static final int sMultiScreenSize = 2;
 
@@ -48,8 +49,11 @@ public class GLLibrary {
     private GLTouchHelper mTouchHelper;
     private GL360Texture mTexture;
 
-    private GLLibrary(Builder builder) {
+    public static final int PROJECTION_MODE_PLANE_FIT = 207;
+    public static final int PROJECTION_MODE_PLANE_CROP = 208;
+    public static final int PROJECTION_MODE_PLANE_FULL = 209;
 
+    private GLLibrary(Builder builder) {
         // init main handler
         UIHandler.init();
 
@@ -78,16 +82,13 @@ public class GLLibrary {
                     director.updateProjectionNearScale(scale);
                 }
             }
-
         });
-
         mScreenWrapper.getView().setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 return mTouchHelper.handleTouchEvent(event);
             }
         });
-
         // init picker manager
     }
 
@@ -101,22 +102,22 @@ public class GLLibrary {
                 .setContentType(builder.contentType)
                 .setTexture(builder.texture);
 
-        mProjectionModeManager = new ProjectionModeManager(builder.projectionMode, projectionManagerParams);
-        mProjectionModeManager.prepare(builder.activity, builder.notSupportCallback);
+        mProjectionModeManager = new ProjectionModeManager( projectionManagerParams);
+        mProjectionModeManager.prepare(builder.activity);
 
         // init DisplayModeManager
-        mDisplayModeManager = new DisplayModeManager(builder.displayMode);
+        mDisplayModeManager = new DisplayModeManager();
         mDisplayModeManager.setBarrelDistortionConfig(builder.barrelDistortionConfig);
         mDisplayModeManager.setAntiDistortionEnabled(builder.barrelDistortionConfig.isDefaultEnabled());
-        mDisplayModeManager.prepare(builder.activity, builder.notSupportCallback);
+        mDisplayModeManager.prepare(builder.activity);
 
         // init InteractiveModeManager
         InteractiveModeManager.Params interactiveManagerParams = new InteractiveModeManager.Params();
         interactiveManagerParams.projectionModeManager = mProjectionModeManager;
         interactiveManagerParams.mMotionDelay = builder.motionDelay;
         interactiveManagerParams.mSensorListener = builder.sensorListener;
-        mInteractiveModeManager = new InteractiveModeManager(builder.interactiveMode,interactiveManagerParams);
-        mInteractiveModeManager.prepare(builder.activity, builder.notSupportCallback);
+        mInteractiveModeManager = new InteractiveModeManager(interactiveManagerParams);
+        mInteractiveModeManager.prepare(builder.activity);
     }
 
     private void initPluginManager(Builder builder) {
@@ -185,6 +186,10 @@ public class GLLibrary {
         mTextureSize.set(0,0,width,height);
     }
 
+    public RectF getTextureSize(){
+        return mTextureSize;
+    }
+
     public void onResume(Context context){
         mInteractiveModeManager.onResume(context);
         if (mScreenWrapper != null){
@@ -210,15 +215,12 @@ public class GLLibrary {
         if (mainPlugin != null){
             mainPlugin.destroy();
         }
-
         if (mTexture != null){
             mTexture.destroy();
             mTexture.release();
             mTexture = null;
         }
-
     }
-
     /**
      * handle touch touch to rotate the model
      * @deprecated deprecated since 2.0
@@ -230,19 +232,6 @@ public class GLLibrary {
         Log.e(TAG,"please remove the handleTouchEvent in activity!");
         return false;
     }
-
-    public int getInteractiveMode() {
-        return mInteractiveModeManager.getMode();
-    }
-
-    public int getDisplayMode(){
-        return mDisplayModeManager.getMode();
-    }
-
-    public int getProjectionMode(){
-        return mProjectionModeManager.getMode();
-    }
-
     public interface IOnSurfaceReadyCallback {
         void onSurfaceReady(Surface surface);
     }
@@ -251,9 +240,6 @@ public class GLLibrary {
         void onProvideBitmap(GL360BitmapTexture.Callback callback);
     }
 
-    public interface INotSupportCallback{
-        void onNotSupport(int mode);
-    }
 
     public interface IGestureListener {
         void onClick(MotionEvent e);
@@ -275,7 +261,6 @@ public class GLLibrary {
         private Activity activity;
         private int contentType = ContentType.DEFAULT;
         private GL360Texture texture;
-        private INotSupportCallback notSupportCallback;
         private boolean pinchEnabled; // default false.
         private BarrelDistortionConfig barrelDistortionConfig;
         private GL360DirectorFactory directorFactory;
@@ -288,10 +273,6 @@ public class GLLibrary {
             this.activity = activity;
         }
 
-        public Builder ifNotSupport(INotSupportCallback callback){
-            this.notSupportCallback = callback;
-            return this;
-        }
 
         public Builder asVideo(IOnSurfaceReadyCallback callback){
             texture = new GL360VideoTexture(callback);

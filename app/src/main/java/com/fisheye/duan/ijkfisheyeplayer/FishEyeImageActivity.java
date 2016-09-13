@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.glextend.vrlib.GLLibrary;
+import com.glextend.vrlib.strategy.projection.DomeProjection;
 import com.glextend.vrlib.texture.GL360BitmapTexture;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -76,9 +77,6 @@ public class FishEyeImageActivity  extends AppCompatActivity  implements GLLibra
 
     public GLLibrary bindVRLibrary() {
         mMDVRLibrary = GLLibrary.with(this)
-                .displayMode(GLLibrary.DISPLAY_MODE_NORMAL)
-                .interactiveMode(GLLibrary.INTERACTIVE_MODE_TOUCH)
-                .projectionMode(GLLibrary.PROJECTION_MODE_DOME180)
                 .pinchEnabled(true)
                 .asBitmap(this)
                 .build(gl_image_view);

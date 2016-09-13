@@ -25,9 +25,7 @@ public class ProjectionModeManager extends ModeManager<AbsProjectionStrategy> im
         public GLMainPluginBuilder mainPluginBuilder;
         public IMDProjectionFactory projectionFactory;
     }
-
     private List<GL360Director> mDirectors = new CopyOnWriteArrayList<>();
-
     private RectF mTextureSize;
 
     private GL360DirectorFactory mCustomDirectorFactory;
@@ -38,8 +36,8 @@ public class ProjectionModeManager extends ModeManager<AbsProjectionStrategy> im
 
     private IMDProjectionFactory mProjectionFactory;
 
-    public ProjectionModeManager(int mode, Params projectionManagerParams) {
-        super(mode);
+    public ProjectionModeManager(Params projectionManagerParams) {
+        super();
         this.mTextureSize = projectionManagerParams.textureSize;
         this.mCustomDirectorFactory = projectionManagerParams.directorFactory;
         this.mProjectionFactory = projectionManagerParams.projectionFactory;
@@ -55,8 +53,8 @@ public class ProjectionModeManager extends ModeManager<AbsProjectionStrategy> im
     }
 
     @Override
-    public void switchMode(Activity activity, int mode) {
-        super.switchMode(activity, mode);
+    public void switchMode(Activity activity) {
+        super.switchMode(activity);
     }
 
     @Override
@@ -78,12 +76,12 @@ public class ProjectionModeManager extends ModeManager<AbsProjectionStrategy> im
     }
 
     @Override
-    protected AbsProjectionStrategy createStrategy(int mode) {
+    protected AbsProjectionStrategy createStrategy() {
         if (mProjectionFactory != null){
-            AbsProjectionStrategy strategy = mProjectionFactory.createStrategy(mode);
+            AbsProjectionStrategy strategy = mProjectionFactory.createStrategy();
             if (strategy != null) return strategy;
         }
-        return new SphereProjection();
+        return new DomeProjection(mTextureSize,185.0f,false);
     }
 
     @Override

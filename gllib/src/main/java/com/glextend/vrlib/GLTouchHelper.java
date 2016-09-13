@@ -13,7 +13,6 @@ import java.util.List;
  * https://github.com/boycy815/PinchImageView/blob/master/pinchimageview/src/main/java/com/boycy815/pinchimageview/PinchImageView.java
  */
 public class GLTouchHelper {
-
     private static final float sScaleMin = 1;
     private static final float sScaleMax = 4;
 

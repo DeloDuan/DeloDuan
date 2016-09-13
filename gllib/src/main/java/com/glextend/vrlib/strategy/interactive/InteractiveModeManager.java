@@ -20,29 +20,21 @@ public class InteractiveModeManager extends ModeManager<AbsInteractiveStrategy> 
 
     private Params mParams;
 
-    public InteractiveModeManager(int mode, Params params) {
-        super(mode);
+    public InteractiveModeManager(Params params) {
+        super();
         mParams = params;
     }
 
 
     @Override
-    public void switchMode(Activity activity, int mode) {
-        super.switchMode(activity, mode);
+    public void switchMode(Activity activity) {
+        super.switchMode(activity);
         if (isResumed()) onResume(activity);
     }
 
     @Override
-    protected AbsInteractiveStrategy createStrategy(int mode) {
-        switch (mode){
-            case GLLibrary.INTERACTIVE_MODE_MOTION:
-                return new MotionStrategy(mParams);
-            case GLLibrary.INTERACTIVE_MODE_MOTION_WITH_TOUCH:
-                return new MotionWithTouchStrategy(mParams);
-            case GLLibrary.INTERACTIVE_MODE_TOUCH:
-            default:
-                return new TouchStrategy(mParams);
-        }
+    protected AbsInteractiveStrategy createStrategy() {
+        return new TouchStrategy(mParams);
     }
 
     /**

@@ -10,6 +10,7 @@ import com.google.android.apps.muzei.render.GLTextureView;
  * Created by  on 16/7/11.
  */
 public abstract class GLScreenWrapper {
+
     abstract public View getView();
     abstract public void setRenderer(GLSurfaceView.Renderer renderer);
     abstract public void init(Context context);

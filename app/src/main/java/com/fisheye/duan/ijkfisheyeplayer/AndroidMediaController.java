@@ -114,9 +114,6 @@ public class AndroidMediaController extends MediaController implements IMediaCon
 
 
     private void attachVRControl() {
-        mMDVRLibrary.switchInteractiveMode(mActivity, GLLibrary.INTERACTIVE_MODE_TOUCH);
-        mMDVRLibrary.switchDisplayMode(mActivity, GLLibrary.DISPLAY_MODE_NORMAL);
-        mMDVRLibrary.switchProjectionMode(mActivity, GLLibrary.PROJECTION_MODE_DOME180);
     }
 
     //----------

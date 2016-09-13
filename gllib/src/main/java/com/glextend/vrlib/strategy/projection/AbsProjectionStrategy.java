@@ -11,17 +11,12 @@ import com.glextend.vrlib.strategy.IModeStrategy;
  * Created by  on 16/6/25.
  */
 public abstract class AbsProjectionStrategy implements IModeStrategy, IProjectionMode {
-
     @Override
     public void onResume(Context context) {
-
     }
-
     @Override
     public void onPause(Context context) {
-
     }
-
     protected GL360DirectorFactory hijackDirectorFactory(){ return null; }
 
     abstract GLAbsPlugin buildMainPlugin(GLMainPluginBuilder builder);

@@ -18,7 +18,6 @@ public class SphereProjection extends AbsProjectionStrategy {
     private GLAbsObject3D object3D;
 
     public SphereProjection() {
-
     }
 
     @Override

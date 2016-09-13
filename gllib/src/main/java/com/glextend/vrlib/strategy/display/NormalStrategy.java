@@ -21,7 +21,6 @@ public class NormalStrategy extends AbsDisplayStrategy {
 
     @Override
     public void onResume(Context context) {
-
     }
 
     @Override

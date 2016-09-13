@@ -34,10 +34,6 @@ public class GLPlane extends GLAbsObject3D {
         this(calculator,new RectF(0,0,1.0f,1.0f));
     }
 
-    public GLPlane(RectF size) {
-        this(new PlaneProjection.PlaneScaleCalculator(GLLibrary.PROJECTION_MODE_PLANE_FULL,new RectF(0,0,100,100)),size);
-    }
-
     @Override
     protected void executeLoad(Context context) {
         generateMesh(this);

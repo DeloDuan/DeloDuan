@@ -11,7 +11,6 @@ public abstract class AbsDisplayStrategy implements IModeStrategy,IDisplayMode {
 
     @Override
     public void onResume(Context context) {
-
     }
 
     @Override

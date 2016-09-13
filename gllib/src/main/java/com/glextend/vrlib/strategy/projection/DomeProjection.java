@@ -20,9 +20,14 @@ public class DomeProjection extends AbsProjectionStrategy {
 
     private float mDegree;
 
+
     private boolean mIsUpper;
 
     private RectF mTextureSize;
+
+    public  DomeProjection(float degree,boolean isUpper){
+       this(new RectF(0,0,1024,1024),degree,isUpper);
+    }
 
     public DomeProjection(RectF textureSize, float degree, boolean isUpper) {
         this.mTextureSize = textureSize;
