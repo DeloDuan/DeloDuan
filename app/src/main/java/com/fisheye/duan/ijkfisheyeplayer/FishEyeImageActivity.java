@@ -29,7 +29,7 @@ public class FishEyeImageActivity  extends AppCompatActivity  implements GLLibra
     GLSurfaceView gl_image_view;
 
     private String mFilePath;
-    private GLLibrary mMDVRLibrary;
+    private GLLibrary mGLLibrary;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,15 +72,15 @@ public class FishEyeImageActivity  extends AppCompatActivity  implements GLLibra
 
 
     private GLLibrary getVRLibrary() {
-        return mMDVRLibrary;
+        return mGLLibrary;
     }
 
     public GLLibrary bindVRLibrary() {
-        mMDVRLibrary = GLLibrary.with(this)
+        mGLLibrary = GLLibrary.with(this)
                 .pinchEnabled(true)
                 .asBitmap(this)
                 .build(gl_image_view);
-        return mMDVRLibrary;
+        return mGLLibrary;
     }
 
     @Override
@@ -91,18 +91,18 @@ public class FishEyeImageActivity  extends AppCompatActivity  implements GLLibra
     @Override
     protected void onResume() {
         super.onResume();
-        mMDVRLibrary.onResume(this);
+        mGLLibrary.onResume(this);
     }
     @Override
     protected void onPause() {
         super.onPause();
-        mMDVRLibrary.onPause(this);
+        mGLLibrary.onPause(this);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mMDVRLibrary.onDestroy();
+        mGLLibrary.onDestroy();
     }
 
     @OnClick(R.id.change_mode)

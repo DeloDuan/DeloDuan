@@ -16,7 +16,6 @@
 package com.xnxs.mediaplayer.widget.media;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -51,11 +50,10 @@ import tv.danmaku.ijk.media.player.IMediaPlayer;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 import tv.danmaku.ijk.media.player.misc.IMediaDataSource;
 
-public class VRVideoView extends FrameLayout implements MediaPlayerControl{
+public class VRVideoView extends FrameLayout implements MediaPlayerControl {
+
     private String TAG = "IjkVideoView";
     // settable by the client
-
-    private IMediaDataSource mMediaDataSource;
     private Uri mUri;
     private Map<String, String> mHeaders;
     // all possible internal states
@@ -103,6 +101,8 @@ public class VRVideoView extends FrameLayout implements MediaPlayerControl{
     /** Subtitle rendering widget overlaid on top of the video. */
     // private RenderingWidget mSubtitleWidget;
 
+    private IMediaDataSource mIMediaDataSource;
+
     /**
      * Listener for changes to subtitle data, used to redraw when needed.
      */
@@ -114,7 +114,7 @@ public class VRVideoView extends FrameLayout implements MediaPlayerControl{
     private int mVideoSarNum;
     private int mVideoSarDen;
 
-    private  int mDisPlayType = MediaPlayerVRControl.VIDEO_TYPE_UNKNOWN;
+    private int mDisPlayType = MediaPlayerVRControl.VIDEO_TYPE_UNKNOWN;
     //UI 相关操作
     private boolean mIsLocked;
     private AudioManager mAudioManager;
@@ -183,16 +183,16 @@ public class VRVideoView extends FrameLayout implements MediaPlayerControl{
             return;
 
         mRenderView = renderView;
-        mRenderView.setAspectRatio(mCurrentAspectRatio);
+        renderView.setAspectRatio(mCurrentAspectRatio);
         if (mVideoWidth > 0 && mVideoHeight > 0)
             renderView.setVideoSize(mVideoWidth, mVideoHeight);
         if (mVideoSarNum > 0 && mVideoSarDen > 0)
             renderView.setVideoSampleAspectRatio(mVideoSarNum, mVideoSarDen);
 
         View renderUIView = mRenderView.getView();
-        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
-                FrameLayout.LayoutParams.WRAP_CONTENT,
-                FrameLayout.LayoutParams.WRAP_CONTENT,
+        LayoutParams lp = new LayoutParams(
+                LayoutParams.WRAP_CONTENT,
+                LayoutParams.WRAP_CONTENT,
                 Gravity.CENTER);
         renderUIView.setLayoutParams(lp);
         addView(renderUIView);
@@ -234,7 +234,8 @@ public class VRVideoView extends FrameLayout implements MediaPlayerControl{
                 break;
         }
     }
-    public void setLastProgress(long lastProgress){
+
+    public void setLastProgress(long lastProgress) {
         mLastProgress = lastProgress;
     }
 
@@ -278,15 +279,6 @@ public class VRVideoView extends FrameLayout implements MediaPlayerControl{
         invalidate();
     }
 
-    public void setDataSource(IMediaDataSource mediaDataSource){
-        mMediaDataSource = mediaDataSource;
-        mSeekWhenPrepared = 0;
-        if (mMediaPlayer == null)
-            openVideo();
-        requestLayout();
-        invalidate();
-    }
-
     // REMOVED: addSubtitleSource
     // REMOVED: mPendingSubtitleTracks
 
@@ -302,7 +294,7 @@ public class VRVideoView extends FrameLayout implements MediaPlayerControl{
 
     @TargetApi(Build.VERSION_CODES.M)
     private void openVideo() {
-        if ((mUri == null && mMediaDataSource == null) || mSurfaceHolder == null) {
+        if ((mUri == null && mIMediaDataSource == null) || mSurfaceHolder == null) {
             // not ready for playback just yet, will try again later
             return;
         }
@@ -335,10 +327,10 @@ public class VRVideoView extends FrameLayout implements MediaPlayerControl{
                 } else {
                     mMediaPlayer.setDataSource(mUri.toString());
                 }
-            }else{
-                mMediaPlayer.setDataSource(mMediaDataSource);
             }
-
+            else{
+                mMediaPlayer.setDataSource(mIMediaDataSource);
+            }
             bindSurfaceHolder(mMediaPlayer, mSurfaceHolder);
             mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             mMediaPlayer.setScreenOnWhilePlaying(true);
@@ -373,6 +365,9 @@ public class VRVideoView extends FrameLayout implements MediaPlayerControl{
         attachMediaVrController();
     }
 
+    public void setDataSource(IMediaDataSource iMediaDataSource){
+        mIMediaDataSource = iMediaDataSource;
+    }
 
     //条件都满足再设置，
     private void attachMediaController() {
@@ -384,8 +379,8 @@ public class VRVideoView extends FrameLayout implements MediaPlayerControl{
 
     }
 
-    private void attachMediaVrController(){
-        if(mediaPlayerVRControl != null && mMediaController!=null){
+    private void attachMediaVrController() {
+        if (mediaPlayerVRControl != null && mMediaController != null) {
             mMediaController.setVRControl(mediaPlayerVRControl);
         }
     }
@@ -663,7 +658,6 @@ public class VRVideoView extends FrameLayout implements MediaPlayerControl{
                 Log.e(TAG, "onSurfaceCreated: unmatched render callback\n");
                 return;
             }
-
             mSurfaceHolder = holder;
             if (mMediaPlayer != null)
                 bindSurfaceHolder(mMediaPlayer, holder);
@@ -679,6 +673,7 @@ public class VRVideoView extends FrameLayout implements MediaPlayerControl{
             }
             // after we return from this we can't use the surface any more
             mSurfaceHolder = null;
+            isNeedCreateRender = true;
             // REMOVED: if (mMediaController != null) mMediaController.hide();
             // REMOVED: release(true);
             releaseWithoutStop();
@@ -715,7 +710,7 @@ public class VRVideoView extends FrameLayout implements MediaPlayerControl{
     private long mSeekStartTime = -1;
     private boolean isPlaySeekEnable = false;
 
-    private long mSeekSlideTimeLength = 4*60*1000; //seek 最大长度为 4 分钟
+    private long mSeekSlideTimeLength = 4 * 60 * 1000; //seek 最大长度为 4 分钟
     private float mBrightness;
 
     private boolean mBrightnessAudioVolumeEnable = false;  //开启亮度和音量加减
@@ -755,13 +750,14 @@ public class VRVideoView extends FrameLayout implements MediaPlayerControl{
         mBrightness = -1f;
         mSeekStartTime = -1;
 
-        if(isPlaySeekEnable){
-            seekTo((int)mPlaySeekTime);
+        if (isPlaySeekEnable) {
+            seekTo((int) mPlaySeekTime);
         }
-        mPlaySeekTime  = 0;
+        mPlaySeekTime = 0;
         isPlaySeekEnable = false;
         onScrollEnable = false;
     }
+
     /**
      * By Lin Date:2016/8/12  15:42
      *
@@ -787,14 +783,14 @@ public class VRVideoView extends FrameLayout implements MediaPlayerControl{
             float mOldX = e1.getX(), mOldY = e1.getY();
             int x = (int) e2.getRawX();
             int y = (int) e2.getRawY();
-            if(Math.abs(distanceX) < Math.abs(distanceY)*0.36){ //滑动角度 tan(x/y) 目前设置为30度
+            if (Math.abs(distanceX) < Math.abs(distanceY) * 0.36) { //滑动角度 tan(x/y) 目前设置为30度
                 if (mOldX > getWidth() * 3.0 / 5.0) {// 右边滑动 屏幕 3/4
                     onVolumeSlide((mOldY - y) / getHeight());
                 } else if (mOldX < getWidth() * 2.0 / 5.0) {// 左边滑动 屏幕 1/4
                     onBrightnessSlide((mOldY - y) / getHeight());
                 }
-            }else if(Math.abs(distanceY) < Math.abs(distanceX)*0.10){
-                onSeekSlide((x - mOldX)/getWidth());
+            } else if (Math.abs(distanceY) < Math.abs(distanceX) * 0.10) {
+                onSeekSlide((x - mOldX) / getWidth());
             }
             return super.onScroll(e1, e2, distanceX, distanceY);
         }
@@ -818,9 +814,11 @@ public class VRVideoView extends FrameLayout implements MediaPlayerControl{
      */
     private void onVolumeSlide(float percent) {
 
-        if(mVolume == -1 && onScrollEnable){   return; }
+        if (mVolume == -1 && onScrollEnable) {
+            return;
+        }
 
-        if (mVolume == -1 ) {
+        if (mVolume == -1) {
             mVolume = getAudioManager().getStreamVolume(AudioManager.STREAM_MUSIC);
             if (mVolume < 0)
                 mVolume = 0;
@@ -835,8 +833,8 @@ public class VRVideoView extends FrameLayout implements MediaPlayerControl{
         getAudioManager().setStreamVolume(AudioManager.STREAM_MUSIC, index, 0);
 
         //展示UI
-        if(mMediaController!=null){
-            mMediaController.showVolumeSet(index*100/mAudioMax);
+        if (mMediaController != null) {
+            mMediaController.showVolumeSet(index * 100 / mAudioMax);
         }
 
         onScrollEnable = true;
@@ -848,7 +846,9 @@ public class VRVideoView extends FrameLayout implements MediaPlayerControl{
      * @注释：滑动改变亮度
      */
     private void onBrightnessSlide(float percent) {
-        if(mBrightness == -1f && onScrollEnable) {return;}
+        if (mBrightness == -1f && onScrollEnable) {
+            return;
+        }
         if (mBrightness < 0.00f) {
             mBrightness = mWindow.getAttributes().screenBrightness;
             if (mBrightness < 0.00f)
@@ -866,37 +866,42 @@ public class VRVideoView extends FrameLayout implements MediaPlayerControl{
         mWindow.setAttributes(lpa);
 
         //展示UI
-        if(mMediaController!=null) {
+        if (mMediaController != null) {
             mMediaController.showBrightnessSet(Math.round(lpa.screenBrightness * 100));
         }
         onScrollEnable = true;
     }
 
     /**
-     *By Lin Date:2016/8/12  16:54
-    *@注释：滑动 seek
-    */
-    private  void onSeekSlide(float percent){
-        if(!isInPlaybackState()){return;}
+     * By Lin Date:2016/8/12  16:54
+     *
+     * @注释：滑动 seek
+     */
+    private void onSeekSlide(float percent) {
+        if (!isInPlaybackState()) {
+            return;
+        }
 
-        if(mSeekStartTime == -1 && onScrollEnable){return;}
+        if (mSeekStartTime == -1 && onScrollEnable) {
+            return;
+        }
 
-        if(mSeekStartTime < 0){
+        if (mSeekStartTime < 0) {
             mSeekStartTime = getCurrentPosition();
         }
         isPlaySeekEnable = (percent >= 0 && canSeekForward()) || canSeekBackward();
         int duration = getDuration();
-        if(isPlaySeekEnable){
-            mPlaySeekTime  = (long)(percent * (float)mSeekSlideTimeLength + mSeekStartTime);
+        if (isPlaySeekEnable) {
+            mPlaySeekTime = (long) (percent * (float) mSeekSlideTimeLength + mSeekStartTime);
             //展示seek页面
-            if(mPlaySeekTime > duration){
-                mPlaySeekTime = duration - 2*1000;
+            if (mPlaySeekTime > duration) {
+                mPlaySeekTime = duration - 2 * 1000;
             }
-            if(mPlaySeekTime < 0){
+            if (mPlaySeekTime < 0) {
                 mPlaySeekTime = 0;
             }
             //展示UI
-            if(mMediaController!=null) {
+            if (mMediaController != null) {
                 mMediaController.showSeekSet(percent >= 0, (int) mPlaySeekTime);
             }
         }
@@ -904,17 +909,19 @@ public class VRVideoView extends FrameLayout implements MediaPlayerControl{
     }
 
     /**
-     *By Lin Date:2016/8/12  15:45
-    *@注释：取消控制亮度声音
-    */
+     * By Lin Date:2016/8/12  15:45
+     *
+     * @注释：取消控制亮度声音
+     */
     private void disableBrightnessAudioVolume() {
         this.mBrightnessAudioVolumeEnable = false;
     }
 
     /**
-     *By Lin Date:2016/8/12  15:46
-    *@注释：设置事件无效高度。主要控制亮度和声音滑动区域。上下等高屏蔽
-    */
+     * By Lin Date:2016/8/12  15:46
+     *
+     * @注释：设置事件无效高度。主要控制亮度和声音滑动区域。上下等高屏蔽
+     */
     private void setTouchInvalidHeight(float touchInvalidHeight) {
         this.mTouchInvalidHeight = touchInvalidHeight;
     }
@@ -996,18 +1003,17 @@ public class VRVideoView extends FrameLayout implements MediaPlayerControl{
     }
 
     public void onResume() {
-        if (mSurfaceHolder!=null) {
+        resume();
+        if (mSurfaceHolder != null) {
             mSurfaceHolder.onResume();
         }
-        isNeedCreateRender = true;
-        resume();
     }
 
     public void onPause() {
-        if (mSurfaceHolder!=null) {
+        pause();
+        if (mSurfaceHolder != null) {
             mSurfaceHolder.onPause();
         }
-        pause();
     }
 
     public void onStop() {
@@ -1029,7 +1035,8 @@ public class VRVideoView extends FrameLayout implements MediaPlayerControl{
                 mMediaPlayer.start();
                 mCurrentState = STATE_PLAYING;
             }
-            if (isNeedCreateRender) {
+
+            if(isNeedCreateRender){
                 isNeedCreateRender = false;
                 setRender(mCurrentRender);
             }
@@ -1135,11 +1142,6 @@ public class VRVideoView extends FrameLayout implements MediaPlayerControl{
         return mCurrentAspectRatio;
     }
 
-    public void setAspectRatio(int aspectRatio){
-        if (mRenderView != null)
-            mRenderView.setAspectRatio(aspectRatio);
-    }
-
     //-------------------------
     // Extend: Render
     //-------------------------
@@ -1148,7 +1150,7 @@ public class VRVideoView extends FrameLayout implements MediaPlayerControl{
     public static final int RENDER_TEXTURE_VIEW = 2;
     public static final int RENDER_GL_SURFACE_VIEW = 3;
 
-    private int mCurrentRender = RENDER_GL_SURFACE_VIEW;
+    private int mCurrentRender = RENDER_NONE;
 
     private void initRenders() {
         setRender(mCurrentRender);

@@ -32,7 +32,7 @@ public class GLSurfaceRenderView extends GLSurfaceView implements IRenderView, M
 
     private MeasureHelper mMeasureHelper;
     private SurfaceCallback mSurfaceCallback;
-    private GLLibrary mMDVRLibrary;
+    private GLLibrary mGLLibrary;
     private Activity mContext;
 
     public GLSurfaceRenderView(Context context) {
@@ -50,42 +50,40 @@ public class GLSurfaceRenderView extends GLSurfaceView implements IRenderView, M
         mSurfaceCallback = new SurfaceCallback(this);
 
         getHolder().addCallback(mSurfaceCallback);
-        //noinspection deprecation
         getHolder().setType(SurfaceHolder.SURFACE_TYPE_GPU);
     }
 
     public void pause() {
-        if (mMDVRLibrary != null) {
-            mMDVRLibrary.onPause(getContext());
+        if (mGLLibrary != null) {
+            mGLLibrary.onPause(getContext());
         }
     }
 
 
     public void resume() {
-        if (mMDVRLibrary != null) {
-            mMDVRLibrary.onResume(getContext());
+        if (mGLLibrary != null) {
+            mGLLibrary.onResume(getContext());
         }
     }
 
     public void onDestroy() {
-        if (mMDVRLibrary != null) {
-            mMDVRLibrary.onDestroy();
+        if (mGLLibrary != null) {
+            mGLLibrary.onDestroy();
         }
-        mMDVRLibrary = null;
+        mGLLibrary = null;
         mDisPlayMode = MediaPlayerVRControl.VIDEO_TYPE_UNKNOWN;
     }
 
     @Override
     public GLLibrary bindVRLibrary(Activity activity) {
-        if (mMDVRLibrary != null) {
-            mMDVRLibrary.onDestroy();
+        if (mGLLibrary != null) {
+            mGLLibrary.onDestroy();
         }
         mContext = activity;
-        mMDVRLibrary = GLLibrary.with(activity)
+        mGLLibrary = GLLibrary.with(activity)
                 .asVideo(mSurfaceCallback)
-                .pinchEnabled(true)
                 .build(this);
-        return mMDVRLibrary;
+        return mGLLibrary;
     }
 
     @Override
@@ -105,8 +103,8 @@ public class GLSurfaceRenderView extends GLSurfaceView implements IRenderView, M
         if (videoWidth > 0 && videoHeight > 0) {
             mMeasureHelper.setVideoSize(videoWidth, videoHeight);
             getHolder().setFixedSize(videoWidth, videoHeight);
-            if (mMDVRLibrary != null) {
-                mMDVRLibrary.onTextureResize(videoWidth, videoHeight);
+            if (mGLLibrary != null) {
+                mGLLibrary.onTextureResize(videoWidth, videoHeight);
             }
             requestLayout();
         }
